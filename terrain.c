@@ -2,24 +2,14 @@
 #include <stdlib.h>
 #include <time.h>
 
-//🟥 🟦 🟩 🟨 🟧 🟪 ⬛ ⬜ 🟫
-#define red "🟥"
 #define blue "0 0 255 "
 #define green "0 255 0 "
 #define yellow "255 255 0 "
-#define orange "🟧"
-#define purple "🟪"
-#define black "⬛"
-#define white "⬜"
-#define brown "🟫"
-
-
 
 int main() {
 
     srand(time(NULL));
-    int lx = 50, ly = 50;
-    //char *map[lx][ly];
+    int lx = 100, ly = 100;
 
     char ***map = malloc(ly * sizeof(char **));
 
@@ -29,40 +19,34 @@ int main() {
     }
 
     //First run
-    for (int y = 0; y<ly; y++) 
+    for (int y = 0; y<ly; y++)
     {
-        for (int x = 0; x<lx; x++) 
+        for (int x = 0; x<lx; x++)
         {
             map[y][x] = blue;
-
-            if (rand() % (lx+ly)/4  + 1 == 1) map[x][y] = green;
         }
         
     }
 
-    for (int y = 0; y<ly; y++) 
+    //random dots set
+    int num_of_dots = 100;
+    int randomy = rand() % ly;
+    int randomx = rand() % lx;
+    int spectr = 10;
+
+    for (int z = 0; z < num_of_dots; z++) 
     {
-        for (int x = 0; x<lx; x++) 
+        randomy += ((rand() % spectr*2 + 2)-spectr);
+        randomx += ((rand() % spectr*2 + 2)-spectr); 
+        if (randomx < lx && randomx > 0 && randomy < ly && randomy > 0) map[randomy][randomx] = green;
+        else 
         {
-            if (x > 0 &&
-                x < lx-1 && 
-                y > 0 && 
-                y < ly-1 &&
-                (map[y][x-1] != blue ||
-                map[y-1][x-1] != blue || 
-                map[y-1][x] != blue || 
-                map[y-1][x+1] != blue || 
-                map[y][x+1] != blue || 
-                map[y+1][x+1] != blue  || 
-                map[y+1][x]  != blue ||
-                map[y+1][x-1] != blue ) &&
-                rand() % 2 + 1 == 1)
-                map[y][x] = green;
+            randomy = rand() % ly;
+            randomx = rand() % lx;
         }
-        
     }
 
-    //third run (sand)
+    //sand
     for (int y = 0; y<ly; y++) 
     {
         for (int x = 0; x<lx; x++) 
@@ -86,7 +70,7 @@ int main() {
         }
     }
 
-    //write to the console
+    //write to the file
     FILE *fm = fopen("map.ppm", "w");
     fprintf(fm, "P3\n%d %d\n255\n", lx, ly);
 
@@ -100,11 +84,11 @@ int main() {
     }
     fclose(fm);
 
+    //free
     for (int y = 0; y < ly; y++)
     {
         free(map[y]);
     }
-
     free(map);
     
     return 0;
