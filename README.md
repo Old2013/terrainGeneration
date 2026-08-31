@@ -1,2 +1,2 @@
 # terrainGeneration
-A simple terrain generator on C
+This is a terrain generation project on C
